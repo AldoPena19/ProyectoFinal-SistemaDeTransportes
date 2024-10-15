@@ -2,8 +2,7 @@
 
 Archivo: ProyectoFinal.java
 
-Autor: <Aldo Javier Amado Peña Pérez>
-Carné: <0900-09-9425>
+Autor: <Aldo Peña>
 
 Fecha: <14102024>
 Curso: Programación II

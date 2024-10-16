@@ -22,6 +22,9 @@ public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Programa base Proyecto Final");
         }
+	System.out.println("Programa 2 test diegol");
+        }
+
 }
 
 

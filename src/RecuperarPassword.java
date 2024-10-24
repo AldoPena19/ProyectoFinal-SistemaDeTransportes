@@ -1,0 +1,198 @@
+import javax.swing.*;
+import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class RecuperarPassword extends JFrame implements ActionListener {
+
+    // Componentes de la interfaz
+    JLabel lblUsuario, lblContrasenaAntigua, lblContrasenaNueva, lblConfirmar, lblMensaje;
+    JTextField txtUsuario;
+    JPasswordField txtContrasenaAntigua, txtContrasenaNueva, txtConfirmar;
+    JButton btnActualizar, btnshowPass,btnRegresar;
+
+
+
+    //crear ventana de recuperacion de contraseña
+    public RecuperarPassword() {
+
+
+        // Crear componentes
+        lblUsuario = new JLabel("Usuario:");
+        txtUsuario = new JTextField();
+        lblContrasenaAntigua = new JLabel("Contraseña Antigua:");
+        txtContrasenaAntigua = new JPasswordField();
+        lblContrasenaNueva = new JLabel("Nueva Contraseña:");
+        txtContrasenaNueva = new JPasswordField();
+        lblConfirmar = new JLabel("Confirmar Contraseña:");
+        txtConfirmar = new JPasswordField();
+        btnActualizar = new JButton("Actualizar");
+        btnshowPass = new JButton("Mostrar");
+        btnRegresar = new JButton("Regresar a login");
+        lblMensaje = new JLabel();
+
+        //Configurar componentes
+        lblUsuario.setBounds(50, 50, 150, 30);
+        txtUsuario.setBounds(215, 50, 150, 30);
+        lblContrasenaAntigua.setBounds(50, 100, 150, 30);
+        txtContrasenaAntigua.setBounds(215, 100, 150, 30);
+        lblContrasenaNueva.setBounds(50, 150, 150, 30);
+        txtContrasenaNueva.setBounds(215, 150, 150, 30);
+        lblConfirmar.setBounds(50, 200, 175, 30);
+        txtConfirmar.setBounds(215, 200, 150, 30);
+        btnActualizar.setBounds(50, 250, 150, 30);
+        btnshowPass.setBounds(215, 250, 150, 30);
+        btnRegresar.setBounds(100, 300, 200, 30);
+        //lblMensaje.setBounds(215, 300, 80, 30);
+
+        //Agregar componentes a la ventana
+        add(lblUsuario);
+        add(txtUsuario);
+        add(lblContrasenaAntigua);
+        add(txtContrasenaAntigua);
+        add(lblContrasenaNueva);
+        add(txtContrasenaNueva);
+        add(lblConfirmar);
+        add(txtConfirmar);
+        add(btnActualizar);
+        add(btnshowPass);
+        add(btnRegresar);
+        //add(lblMensaje);
+
+        //agregar la accion al boton de actualizar
+        btnActualizar.addActionListener(this);
+
+        // Configuración de la ventana
+        setSize(400, 400);
+        setTitle("Recuperar Contraseña");
+        setLayout(null);
+        setVisible(false);
+
+        // Acción para cerrar la ventana
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent we) {
+                dispose();
+            }
+        });
+
+        //Accion par mostrar contraseña
+        btnshowPass.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (btnshowPass.getText().equals("Mostrar")) {
+                    txtContrasenaAntigua.setEchoChar((char) 0); // Muestra la contraseña
+                    txtContrasenaNueva.setEchoChar((char) 0); // Muestra la contraseña
+                    txtConfirmar.setEchoChar((char) 0); // Muestra la contraseña
+                    btnshowPass.setText("Ocultar");
+                } else {
+                    txtContrasenaAntigua.setEchoChar('*'); // Oculta la contraseña
+                    txtContrasenaNueva.setEchoChar('*'); // Oculta la contraseña
+                    txtConfirmar.setEchoChar('*'); // Oculta la contraseña
+                    btnshowPass.setText("Mostrar");
+                }
+            }
+        });
+
+        //Accion para regresar al login
+        btnRegresar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Login log = new Login();
+                setVisible(false);
+                log.setVisible(true);
+
+            }
+        });
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        //instancia de Login
+        Login log = new Login();
+
+        // Aquí va la lógica para actualizar la contraseña
+        String usuario = txtUsuario.getText();
+        String contrasenaAntigua = new String(txtContrasenaAntigua.getPassword());
+        String contrasenaNueva = new String(txtContrasenaNueva.getPassword());
+        String confirmarContrasena = new String(txtConfirmar.getPassword());
+
+        if (usuario.isEmpty() ||  contrasenaAntigua.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, usuario y contraseña antigua.");
+        }else if(contrasenaNueva.isEmpty() || confirmarContrasena.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "La contraseña nueva no puede estar vacia. ");
+        }else {
+            // Verificar si las contraseñas coinciden y actualizar la base de datos
+            if (contrasenaNueva.equals(confirmarContrasena)) {
+                // Lógica para actualizar la contraseña en la base de datos
+                boolean passnew = CambioPassword(usuario, contrasenaNueva);
+                if (passnew) {
+                    JOptionPane.showMessageDialog(this, "Contraseña actualizada exitosamente.");
+                    setVisible(false);
+                    log.setVisible(true);
+                }
+
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Las contraseñas no coinciden");
+            }
+        }
+
+
+    }
+
+    public static boolean CambioPassword(String user, String passwordnew) {
+        Connection conexion = null;  // Declaración de la conexión
+        ConexionBD conexionBD = new ConexionBD(); //Instancia a la coneccion
+        MD5Generator md5 = new MD5Generator(); //Instancia a las contraseñas MD5
+        PreparedStatement pst = null;
+        ResultSet query = null;
+        boolean cambiopass = false;
+
+        try {
+            conexion = conexionBD.conectar();
+            if (conexion == null) {
+                throw new SQLException("No se pudo establecer conexion con la base de datos");
+            }
+
+            //crear consulta SQL
+            String sql = "UPDATE Usuario SET password = ? WHERE usuario = ?";
+            pst = conexion.prepareStatement(sql);
+            pst.setString(1, md5.getMD5(passwordnew));
+            pst.setString(2, user);
+
+            // Ejecutar el query
+            int rowsAffected = pst.executeUpdate();
+            if (rowsAffected > 0) {
+                cambiopass = true;
+                System.out.println("Contraseña actualizada exitosamente.");
+            } else {
+                cambiopass = false;
+                System.out.println("No se actualizó ninguna fila. Verifique el nombre de usuario ingresado.");
+            }
+
+        } catch (
+                SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            // Cerrar los recursos
+            try {
+                if (query != null) query.close();
+                if (pst != null) pst.close();
+                if (conexion != null) conexion.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return cambiopass;
+
+    }
+
+}
+

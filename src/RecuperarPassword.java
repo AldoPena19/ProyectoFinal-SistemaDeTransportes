@@ -12,9 +12,9 @@ import java.sql.SQLException;
 public class RecuperarPassword extends JFrame implements ActionListener {
 
     // Componentes de la interfaz
-    JLabel lblUsuario, lblContrasenaAntigua, lblContrasenaNueva, lblConfirmar, lblMensaje;
+    JLabel lblUsuario, lblContrasenaNueva, lblConfirmar, lblMensaje;
     JTextField txtUsuario;
-    JPasswordField txtContrasenaAntigua, txtContrasenaNueva, txtConfirmar;
+    JPasswordField txtContrasenaNueva, txtConfirmar;
     JButton btnActualizar, btnshowPass,btnRegresar;
 
 
@@ -26,8 +26,6 @@ public class RecuperarPassword extends JFrame implements ActionListener {
         // Crear componentes
         lblUsuario = new JLabel("Usuario:");
         txtUsuario = new JTextField();
-        lblContrasenaAntigua = new JLabel("Contraseña Antigua:");
-        txtContrasenaAntigua = new JPasswordField();
         lblContrasenaNueva = new JLabel("Nueva Contraseña:");
         txtContrasenaNueva = new JPasswordField();
         lblConfirmar = new JLabel("Confirmar Contraseña:");
@@ -40,22 +38,18 @@ public class RecuperarPassword extends JFrame implements ActionListener {
         //Configurar componentes
         lblUsuario.setBounds(50, 50, 150, 30);
         txtUsuario.setBounds(215, 50, 150, 30);
-        lblContrasenaAntigua.setBounds(50, 100, 150, 30);
-        txtContrasenaAntigua.setBounds(215, 100, 150, 30);
-        lblContrasenaNueva.setBounds(50, 150, 150, 30);
-        txtContrasenaNueva.setBounds(215, 150, 150, 30);
-        lblConfirmar.setBounds(50, 200, 175, 30);
-        txtConfirmar.setBounds(215, 200, 150, 30);
-        btnActualizar.setBounds(50, 250, 150, 30);
-        btnshowPass.setBounds(215, 250, 150, 30);
-        btnRegresar.setBounds(100, 300, 200, 30);
+        lblContrasenaNueva.setBounds(50, 100, 150, 30);
+        txtContrasenaNueva.setBounds(215, 100, 150, 30);
+        lblConfirmar.setBounds(50, 150, 175, 30);
+        txtConfirmar.setBounds(215, 150, 150, 30);
+        btnActualizar.setBounds(50, 200, 150, 30);
+        btnshowPass.setBounds(215, 200, 150, 30);
+        btnRegresar.setBounds(100, 250, 200, 30);
         //lblMensaje.setBounds(215, 300, 80, 30);
 
         //Agregar componentes a la ventana
         add(lblUsuario);
         add(txtUsuario);
-        add(lblContrasenaAntigua);
-        add(txtContrasenaAntigua);
         add(lblContrasenaNueva);
         add(txtContrasenaNueva);
         add(lblConfirmar);
@@ -86,12 +80,10 @@ public class RecuperarPassword extends JFrame implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (btnshowPass.getText().equals("Mostrar")) {
-                    txtContrasenaAntigua.setEchoChar((char) 0); // Muestra la contraseña
                     txtContrasenaNueva.setEchoChar((char) 0); // Muestra la contraseña
                     txtConfirmar.setEchoChar((char) 0); // Muestra la contraseña
                     btnshowPass.setText("Ocultar");
                 } else {
-                    txtContrasenaAntigua.setEchoChar('*'); // Oculta la contraseña
                     txtContrasenaNueva.setEchoChar('*'); // Oculta la contraseña
                     txtConfirmar.setEchoChar('*'); // Oculta la contraseña
                     btnshowPass.setText("Mostrar");
@@ -119,12 +111,11 @@ public class RecuperarPassword extends JFrame implements ActionListener {
 
         // Aquí va la lógica para actualizar la contraseña
         String usuario = txtUsuario.getText();
-        String contrasenaAntigua = new String(txtContrasenaAntigua.getPassword());
         String contrasenaNueva = new String(txtContrasenaNueva.getPassword());
         String confirmarContrasena = new String(txtConfirmar.getPassword());
 
-        if (usuario.isEmpty() ||  contrasenaAntigua.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Por favor, usuario y contraseña antigua.");
+        if (usuario.isEmpty() ) {
+            JOptionPane.showMessageDialog(this, "Por favor, usuario");
         }else if(contrasenaNueva.isEmpty() || confirmarContrasena.isEmpty()) {
             JOptionPane.showMessageDialog(this, "La contraseña nueva no puede estar vacia. ");
         }else {

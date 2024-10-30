@@ -110,7 +110,7 @@ public class FormLogin extends JFrame implements ActionListener {
         if (e.getSource() == botonLogin) {
             String usuario = textUsuario.getText();
             String contrasena = new String(textContrasena.getPassword());
-            int rol = conetar_usuario.obtenerRol(usuario, md5.getMD5(contrasena));
+            int rol = conetar_usuario.obtenerRol(usuario, contrasena);
 
             // Validar datos
             if (usuario.isEmpty() || contrasena.isEmpty()) {

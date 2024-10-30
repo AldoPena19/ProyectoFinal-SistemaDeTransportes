@@ -138,7 +138,6 @@ public class RecuperarPassword extends JFrame implements ActionListener {
     public static boolean CambioPassword(String user, String passwordnew) {
         Connection conexion = null;  // Declaración de la conexión
         ConexionBD conexionBD = new ConexionBD(); //Instancia a la coneccion
-        MD5Generator md5 = new MD5Generator(); //Instancia a las contraseñas MD5
         PreparedStatement pst = null;
         ResultSet query = null;
         boolean cambiopass = false;
@@ -152,7 +151,7 @@ public class RecuperarPassword extends JFrame implements ActionListener {
             //crear consulta SQL
             String sql = "UPDATE Usuario SET password = ? WHERE usuario = ? and status = 'A'";
             pst = conexion.prepareStatement(sql);
-            pst.setString(1, md5.getMD5(passwordnew));
+            pst.setString(1, passwordnew);
             pst.setString(2, user);
 
             // Ejecutar el query

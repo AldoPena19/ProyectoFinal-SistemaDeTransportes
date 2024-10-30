@@ -24,10 +24,10 @@ public class Usuario {
             }
 
             // Crear la consulta SQL
-            String sql = "SELECT * FROM usuario WHERE usuario = ? AND password = ? status = 'A'";
+            String sql = "SELECT * FROM usuario WHERE usuario = ? AND password = ? AND status = 'A'";
             pst = conexion.prepareStatement(sql);
             pst.setString(1, usuario);
-            pst.setString(2, md5.getMD5(contrasena));
+            pst.setString(2, contrasena);
 
 
             // Ejecutar la consulta

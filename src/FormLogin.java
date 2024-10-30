@@ -77,6 +77,18 @@ public class FormLogin extends JFrame implements ActionListener {
             }
         });
 
+        // Botón para buscar
+        JButton btnSalir = new JButton("Salir");
+        btnSalir.setBounds(50, 185, 80, 30);
+        add(btnSalir);
+
+        btnSalir.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+
         //Accion par mostrar contraseña
         btnshowPass.addActionListener(new ActionListener() {
             @Override

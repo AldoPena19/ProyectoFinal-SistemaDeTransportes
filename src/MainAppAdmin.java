@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
@@ -13,6 +15,11 @@ public class MainAppAdmin extends JFrame {
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        // Botón para buscar
+        JButton btnSalir = new JButton("Salir");
+        btnSalir.setBounds(720, 0, 80, 20);
+        add(btnSalir);
+
         tabbedPane = new JTabbedPane();
 
         tabbedPane.addTab("Camioneros", crearPanelCamioneros());
@@ -23,6 +30,14 @@ public class MainAppAdmin extends JFrame {
 
         add(tabbedPane);
         setVisible(false);
+
+        btnSalir.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setVisible(false);
+                new FormLogin().setVisible(true);
+            }
+        });
     }
 
     private JPanel crearPanelCamioneros() {
@@ -445,7 +460,7 @@ public class MainAppAdmin extends JFrame {
         agregarBtn.addActionListener(e -> {
             try {
                 Viaje viaje = new Viaje(
-                        0,
+                        Integer.parseInt(idViajeField.getText()),
                         camioneroDPIField.getText(),
                         camionMatriculaField.getText(),
                         fechaSalidaField.getText().isEmpty() ? new Timestamp(0) : Timestamp.valueOf(fechaSalidaField.getText()),

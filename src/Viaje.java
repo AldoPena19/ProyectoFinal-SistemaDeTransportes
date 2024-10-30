@@ -41,13 +41,14 @@ public class Viaje {
     }
 
     public static void agregarViaje(Viaje viaje) throws SQLException {
-        String sql = "INSERT INTO viaje (dpi_camionero, matricula_camion, fecha_salida, fecha_regreso) VALUES ( ?, ?, ?, ?)";
+        String sql = "INSERT INTO viaje (id_viaje, dpi_camionero, matricula_camion, fecha_salida, fecha_regreso) VALUES ( ?, ?, ?, ?, ?)";
         try (
              PreparedStatement pstmt = con.prepareStatement(sql)) {
-            pstmt.setString(1, viaje.camioneroDPI);
-            pstmt.setString(2, viaje.camionMatricula);
-            pstmt.setTimestamp(3, new java.sql.Timestamp(System.currentTimeMillis()));
+            pstmt.setInt(1,viaje.idViaje);
+            pstmt.setString(2, viaje.camioneroDPI);
+            pstmt.setString(3, viaje.camionMatricula);
             pstmt.setTimestamp(4, new java.sql.Timestamp(System.currentTimeMillis()));
+            pstmt.setTimestamp(5, new java.sql.Timestamp(System.currentTimeMillis()));
             pstmt.executeUpdate();
         }
     }

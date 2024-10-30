@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
@@ -13,6 +15,11 @@ public class MainAppCamionero extends JFrame {
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        // Botón para buscar
+        JButton btnSalir = new JButton("Salir");
+        btnSalir.setBounds(720, 0, 80, 20);
+        add(btnSalir);
+
         tabbedPane = new JTabbedPane();
 
         tabbedPane.addTab("Paquetes", crearPanelPaquetes());
@@ -20,6 +27,14 @@ public class MainAppCamionero extends JFrame {
 
         add(tabbedPane);
         setVisible(false);
+
+        btnSalir.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setVisible(false);
+                new FormLogin().setVisible(true);
+            }
+        });
     }
 
 

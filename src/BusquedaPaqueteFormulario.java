@@ -14,7 +14,7 @@ public class BusquedaPaqueteFormulario extends JFrame {
 
     // Campos de entrada y etiquetas para mostrar los resultados
     private JTextField txtReferencia;
-    private JTextField txtNombreCamionero, txtMatricula, txtCodigoPaquete, txtDescripcionPaquete, txtDestinatario, txtDireccionDestinatario, txtCodigoDepartamento, txtNombreDepartamento, txtFechaSalida, txtFechaRegreso;
+    private JTextField txtNombreCamionero, txtMatricula, txtDescripcionPaquete, txtDestinatario, txtDireccionDestinatario, txtCodigoDepartamento, txtNombreDepartamento, txtFechaSalida;
 
     public BusquedaPaqueteFormulario() {
         setTitle("Formulario de Búsqueda de Paquete");
@@ -23,7 +23,7 @@ public class BusquedaPaqueteFormulario extends JFrame {
         setLayout(null);
 
         // Campo para ingresar referencia
-        JLabel lblReferencia = new JLabel("Ingrese referencia (Paquete/Matrícula/DPI):");
+        JLabel lblReferencia = new JLabel("Ingrese referencia (Codigo de Paquete):");
         lblReferencia.setBounds(20, 20, 250, 20);
         add(lblReferencia);
 
@@ -46,6 +46,11 @@ public class BusquedaPaqueteFormulario extends JFrame {
         txtNombreCamionero.setEditable(false);
         add(txtNombreCamionero);
 
+        // Botón para salir
+        JButton btnSalir = new JButton("Salir");
+        btnSalir.setBounds(480, 60, 80, 25);
+        add(btnSalir);
+
         JLabel lblMatricula = new JLabel("Matrícula del Camión:");
         lblMatricula.setBounds(20, 100, 200, 20);
         add(lblMatricula);
@@ -55,77 +60,61 @@ public class BusquedaPaqueteFormulario extends JFrame {
         txtMatricula.setEditable(false);
         add(txtMatricula);
 
-        JLabel lblCodigoPaquete = new JLabel("Código del Paquete:");
-        lblCodigoPaquete.setBounds(20, 140, 200, 20);
-        add(lblCodigoPaquete);
-
-        txtCodigoPaquete = new JTextField();
-        txtCodigoPaquete.setBounds(270, 140, 200, 25);
-        txtCodigoPaquete.setEditable(false);
-        add(txtCodigoPaquete);
-
         JLabel lblDescripcionPaquete = new JLabel("Descripción del Paquete:");
-        lblDescripcionPaquete.setBounds(20, 180, 200, 20);
+        lblDescripcionPaquete.setBounds(20, 140, 200, 20);
         add(lblDescripcionPaquete);
 
         txtDescripcionPaquete = new JTextField();
-        txtDescripcionPaquete.setBounds(270, 180, 200, 25);
+        txtDescripcionPaquete.setBounds(270, 140, 200, 25);
         txtDescripcionPaquete.setEditable(false);
         add(txtDescripcionPaquete);
 
         JLabel lblDestinatario = new JLabel("Destinatario:");
-        lblDestinatario.setBounds(20, 220, 200, 20);
+        lblDestinatario.setBounds(20, 180, 200, 20);
         add(lblDestinatario);
 
         txtDestinatario = new JTextField();
-        txtDestinatario.setBounds(270, 220, 200, 25);
+        txtDestinatario.setBounds(270, 180, 200, 25);
         txtDestinatario.setEditable(false);
         add(txtDestinatario);
 
         JLabel lblDireccionDestinatario = new JLabel("Dirección del Destinatario:");
-        lblDireccionDestinatario.setBounds(20, 260, 200, 20);
+        lblDireccionDestinatario.setBounds(20, 220, 200, 20);
         add(lblDireccionDestinatario);
 
         txtDireccionDestinatario = new JTextField();
-        txtDireccionDestinatario.setBounds(270, 260, 200, 25);
+        txtDireccionDestinatario.setBounds(270, 220, 200, 25);
         txtDireccionDestinatario.setEditable(false);
         add(txtDireccionDestinatario);
 
         JLabel lblCodigoDepartamento = new JLabel("Código del Departamento:");
-        lblCodigoDepartamento.setBounds(20, 300, 200, 20);
+        lblCodigoDepartamento.setBounds(20, 260, 200, 20);
         add(lblCodigoDepartamento);
 
         txtCodigoDepartamento = new JTextField();
-        txtCodigoDepartamento.setBounds(270, 300, 200, 25);
+        txtCodigoDepartamento.setBounds(270, 260, 200, 25);
         txtCodigoDepartamento.setEditable(false);
         add(txtCodigoDepartamento);
 
         JLabel lblNombreDepartamento = new JLabel("Nombre del Departamento:");
-        lblNombreDepartamento.setBounds(20, 340, 200, 20);
+        lblNombreDepartamento.setBounds(20, 300, 200, 20);
         add(lblNombreDepartamento);
 
         txtNombreDepartamento = new JTextField();
-        txtNombreDepartamento.setBounds(270, 340, 200, 25);
+        txtNombreDepartamento.setBounds(270, 300, 200, 25);
         txtNombreDepartamento.setEditable(false);
         add(txtNombreDepartamento);
 
         JLabel lblFechaSalida = new JLabel("Fecha y Hora de Salida:");
-        lblFechaSalida.setBounds(20, 380, 200, 20);
+        lblFechaSalida.setBounds(20, 340, 200, 20);
         add(lblFechaSalida);
 
         txtFechaSalida = new JTextField();
-        txtFechaSalida.setBounds(270, 380, 200, 25);
+        txtFechaSalida.setBounds(270, 340, 200, 25);
         txtFechaSalida.setEditable(false);
         add(txtFechaSalida);
 
-        JLabel lblFechaRegreso = new JLabel("Fecha y Hora de Regreso:");
-        lblFechaRegreso.setBounds(20, 420, 200, 20);
-        add(lblFechaRegreso);
 
-        txtFechaRegreso = new JTextField();
-        txtFechaRegreso.setBounds(270, 420, 200, 25);
-        txtFechaRegreso.setEditable(false);
-        add(txtFechaRegreso);
 
         // Acción del botón buscar
         btnBuscar.addActionListener(new ActionListener() {
@@ -134,27 +123,35 @@ public class BusquedaPaqueteFormulario extends JFrame {
                 buscarPaquete(referencia);
             }
         });
+
+        //accion salir del programa
+        btnSalir.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setVisible(false);
+                new FormLogin().setVisible(true);
+            }
+        });
     }
 
     // Método para buscar el paquete en la base de datos
     public void buscarPaquete(String referencia) {
 
-        String consultaSQL = "SELECT *" +
-                "FROM Viajes v " +
-                "JOIN Camioneros c ON v.DPI_camionero = c.DPI " +
-                "JOIN Camiones ca ON v.matricula_camion = ca.matricula " +
-                "JOIN Viajes_Paquetes vp ON v.id_viaje = vp.id_viaje " +
-                "JOIN Paquetes p ON vp.codigo_paquete = p.codigo_paquete " +
-                "JOIN Departamentos d ON p.codigo_departamento = d.codigo_departamento " +
-                "WHERE p.codigo_paquete = ? OR c.DPI = ? OR ca.matricula = ?";
+        String consultaSQL = "SELECT c.nombre AS nombre_camionero, ca.matricula, p.descripcion, " +
+                "p.destinatario, p.direccion_destinatario, d.codigo_departamento, " +
+                "d.nombre AS nombre_departamento, v.fecha_salida " +
+                "FROM Viaje v " +
+                "JOIN Camionero c ON v.DPI_camionero = c.DPI " +
+                "JOIN Camion ca ON v.matricula_camion = ca.matricula " +
+                "JOIN Paquete p ON v.id_viaje = p.codigo_paquete " +
+                "JOIN Departamento d ON p.codigo_departamento = d.codigo_departamento " +
+                "WHERE v.id_viaje = ?";
 
         try (
              PreparedStatement stmt = con.prepareStatement(consultaSQL)) {
 
             // Asignar la referencia a los parámetros de la consulta
             stmt.setString(1, referencia);
-            stmt.setString(2, referencia);
-            stmt.setString(3, referencia);
 
             // Ejecutar la consulta
             ResultSet rs = stmt.executeQuery();
@@ -163,14 +160,12 @@ public class BusquedaPaqueteFormulario extends JFrame {
                 // Mostrar los resultados en los campos de texto
                 txtNombreCamionero.setText(rs.getString("nombre_camionero"));
                 txtMatricula.setText(rs.getString("matricula"));
-                txtCodigoPaquete.setText(rs.getString("codigo_paquete"));
                 txtDescripcionPaquete.setText(rs.getString("descripcion"));
                 txtDestinatario.setText(rs.getString("destinatario"));
                 txtDireccionDestinatario.setText(rs.getString("direccion_destinatario"));
                 txtCodigoDepartamento.setText(rs.getString("codigo_departamento"));
                 txtNombreDepartamento.setText(rs.getString("nombre_departamento"));
                 txtFechaSalida.setText(rs.getTimestamp("fecha_salida").toString());
-                txtFechaRegreso.setText(rs.getTimestamp("fecha_regreso_estimada").toString());
             } else {
                 JOptionPane.showMessageDialog(this, "No se encontraron resultados para la referencia proporcionada.");
             }

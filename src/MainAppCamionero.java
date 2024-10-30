@@ -151,7 +151,5 @@ public class MainAppCamionero extends JFrame {
 
 
 
-    public static void main(String[] args) {
-        new MainAppCamionero();
-    }
+
 }

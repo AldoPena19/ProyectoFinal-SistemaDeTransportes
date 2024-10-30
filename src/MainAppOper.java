@@ -333,7 +333,5 @@ public class MainAppOper extends JFrame {
         panel.add(buttonPanel, BorderLayout.SOUTH);
     }
 
-    public static void main(String[] args) {
-        new MainAppOper();
-    }
+
 }

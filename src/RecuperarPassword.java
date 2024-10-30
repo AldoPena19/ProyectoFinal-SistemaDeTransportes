@@ -150,9 +150,9 @@ public class RecuperarPassword extends JFrame implements ActionListener {
             }
 
             //crear consulta SQL
-            String sql = "UPDATE Usuario SET password = ? WHERE usuario = ?";
+            String sql = "UPDATE Usuario SET password = ? WHERE usuario = ? and status = 'A'";
             pst = conexion.prepareStatement(sql);
-            pst.setString(1, /*md5.getMD5(*/passwordnew/*)*/);
+            pst.setString(1, md5.getMD5(passwordnew));
             pst.setString(2, user);
 
             // Ejecutar el query

@@ -3,6 +3,7 @@ import javax.swing.*;
 
 public class FormLogin extends JFrame implements ActionListener {
 
+    MD5Generator md5 = new MD5Generator(); //Instancia a las contraseñas MD5
 
 
     // Componentes de la interfaz
@@ -108,8 +109,8 @@ public class FormLogin extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == botonLogin) {
             String usuario = textUsuario.getText();
-            String contrasena = new String(textContrasena.getText());
-            int rol = conetar_usuario.obtenerRol(usuario, contrasena);
+            String contrasena = new String(textContrasena.getPassword());
+            int rol = conetar_usuario.obtenerRol(usuario, md5.getMD5(contrasena));
 
             // Validar datos
             if (usuario.isEmpty() || contrasena.isEmpty()) {
@@ -160,8 +161,5 @@ public class FormLogin extends JFrame implements ActionListener {
     }
 
 
-    public static void main(String[] args) {
-        new FormLogin();
-    }
 
 }

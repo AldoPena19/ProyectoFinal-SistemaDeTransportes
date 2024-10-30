@@ -174,8 +174,5 @@ public class BusquedaPaqueteFormulario extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        BusquedaPaqueteFormulario frame = new BusquedaPaqueteFormulario();
-        frame.setVisible(true);
-    }
+
 }

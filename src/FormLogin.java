@@ -1,8 +1,9 @@
-import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class Login extends JFrame implements ActionListener {
+public class FormLogin extends JFrame implements ActionListener {
+
+
 
     // Componentes de la interfaz
     JLabel labelUsuario, labelContrasena, labelOlvideContrasena;
@@ -15,7 +16,9 @@ public class Login extends JFrame implements ActionListener {
     //Intancia a recuperar contraseña
     RecuperarPassword Rpass = new RecuperarPassword();
 
-    public Login() {
+
+
+    public FormLogin() {
 
 
         // Crear componentes
@@ -61,6 +64,9 @@ public class Login extends JFrame implements ActionListener {
         // Configuración de la ventana
         setSize(400, 300);
         setTitle("Formulario de Login");
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLayout(null);
         setLayout(null);
         setVisible(true);
 
@@ -104,20 +110,31 @@ public class Login extends JFrame implements ActionListener {
                     if (conetar_usuario.validarUsuario(usuario, contrasena)) {
                         textUsuario.setText("");
                         textContrasena.setText("");
-                        JOptionPane.showMessageDialog(this, "Inicio de sesión exitoso");
+                        JOptionPane.showMessageDialog(this, "Inicio de sesión exitoso" );
 
                         if (rol == 1) {
                             // Si la autenticación es exitosa, mostrar un mensaje y cerrar la ventana
                             JOptionPane.showMessageDialog(this, "El rol que tiene es: Adminsitrador");
+                            setVisible(false);
+                            new MainAppAdmin().setVisible(true);
+
                         } else if (rol == 2) {
                             // Si la autenticación es exitosa, mostrar un mensaje y cerrar la ventana
                             JOptionPane.showMessageDialog(this, "El rol que tiene es: Camionero");
+                            setVisible(false);
+                            new MainAppCamionero().setVisible(true);
                         } else if (rol == 3) {
                             // Si la autenticación es exitosa, mostrar un mensaje y cerrar la ventana
-                            JOptionPane.showMessageDialog(this, "El rol que tiene es: Cliente");
+                            JOptionPane.showMessageDialog(this, "Bienvenido al Sistema"); // Ingreso Cliente
+                            setVisible(false);
+                            new BusquedaPaqueteFormulario().setVisible(true);
                         } else if (rol == 4) {
                             // Si la autenticación es exitosa, mostrar un mensaje y cerrar la ventana
                             JOptionPane.showMessageDialog(this, "El rol que tiene es: Operador");
+                            setVisible(false);
+                            new MainAppOper().setVisible(true);
+                        }else {
+                            JOptionPane.showMessageDialog(this,"No tiene Rol asignado, comuniquese con el administrador del sistema");
                         }
                     } else {
                         JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.");
@@ -132,7 +149,7 @@ public class Login extends JFrame implements ActionListener {
 
 
     public static void main(String[] args) {
-        new Login();
+        new FormLogin();
     }
 
 }

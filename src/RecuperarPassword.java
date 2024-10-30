@@ -1,9 +1,6 @@
 import javax.swing.*;
 import java.awt.event.ActionListener;
-import java.awt.*;
 import java.awt.event.*;
-import javax.swing.*;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -95,7 +92,7 @@ public class RecuperarPassword extends JFrame implements ActionListener {
         btnRegresar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Login log = new Login();
+                FormLogin log = new FormLogin();
                 setVisible(false);
                 log.setVisible(true);
 
@@ -107,7 +104,7 @@ public class RecuperarPassword extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         //instancia de Login
-        Login log = new Login();
+        FormLogin log = new FormLogin();
 
         // Aquí va la lógica para actualizar la contraseña
         String usuario = txtUsuario.getText();
@@ -155,7 +152,7 @@ public class RecuperarPassword extends JFrame implements ActionListener {
             //crear consulta SQL
             String sql = "UPDATE Usuario SET password = ? WHERE usuario = ?";
             pst = conexion.prepareStatement(sql);
-            pst.setString(1, md5.getMD5(passwordnew));
+            pst.setString(1, /*md5.getMD5(*/passwordnew/*)*/);
             pst.setString(2, user);
 
             // Ejecutar el query

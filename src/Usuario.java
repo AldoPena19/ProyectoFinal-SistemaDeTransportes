@@ -27,7 +27,7 @@ public class Usuario {
             String sql = "SELECT * FROM usuario WHERE usuario = ? AND password = ? ";
             pst = conexion.prepareStatement(sql);
             pst.setString(1, usuario);
-            pst.setString(2, md5.getMD5(contrasena));
+            pst.setString(2, /*md5.getMD5(*/contrasena/*)*/);
 
 
             // Ejecutar la consulta

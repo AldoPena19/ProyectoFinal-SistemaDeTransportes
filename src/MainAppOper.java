@@ -39,8 +39,6 @@ public class MainAppOper extends JFrame {
     }
 
 
-
-
     private JPanel crearPanelPaquetes() {
         JPanel panel = new JPanel(new BorderLayout());
         JTextArea display = new JTextArea();
@@ -66,6 +64,8 @@ public class MainAppOper extends JFrame {
         inputPanel.add(codigoDepartamentoField);
         inputPanel.add(new JLabel("Motivo No Entrega:"));
         inputPanel.add(motivoNoEntregaField);
+
+        display.setEditable(false);
 
         panel.add(inputPanel, BorderLayout.NORTH);
         agregarBotonesPaquetes(panel, display, codigoPaqueteField, descripcionField, destinatarioField,
@@ -124,10 +124,47 @@ public class MainAppOper extends JFrame {
             }
         });
 
+        JButton mostrarBtn = new JButton("Mostrar Paquetes");
+        mostrarBtn.addActionListener(e -> {
+            try {
+                List<Paquete> paquetes = Paquete.obtenerPaquetes();
+
+                // Crear un StringBuilder para construir el texto
+                StringBuilder texto = new StringBuilder();
+
+                // Agregar encabezado
+                texto.append(String.format("%-6s %-20s %-15s %-30s %-30s %-30s%n",
+                        "Codigo", "Descripcion", "Destinatario", "Direccion", "Departamento", "Estado Entrega"));
+                texto.append("-".repeat(150)).append("\n"); // Reducido el número de guiones
+
+                // Agregar cada motivo
+                for (Paquete paquete : paquetes) {
+                    texto.append(String.format("%-6s %-20s %-15s %-30s %-30s %-30s%n",
+                            paquete.getCodigoPaquete(),
+                            paquete.getDescripcion(),
+                            paquete.getDestinatario(),
+                            paquete.getDireccionDestinatario(),
+                            paquete.getNomDepartamento(),
+                            paquete.getEstadoEntrega()
+                    ));
+                }
+
+                // Actualizar el área de texto
+                display.setText(texto.toString());
+
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null,
+                        "Error al mostrar los paquetes: " + ex.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(agregarBtn);
-        buttonPanel.add(eliminarBtn);
+        //buttonPanel.add(eliminarBtn);
         buttonPanel.add(actualizarBtn);
+        buttonPanel.add(mostrarBtn);
         panel.add(buttonPanel, BorderLayout.SOUTH);
     }
 
@@ -145,6 +182,8 @@ public class MainAppOper extends JFrame {
         inputPanel.add(idMotivoField);
         inputPanel.add(new JLabel("Descripción:"));
         inputPanel.add(descripcionField);
+
+        display.setEditable(false);
 
         panel.add(inputPanel, BorderLayout.NORTH);
         agregarBotonesMotivos(panel, display, idMotivoField, descripcionField);
@@ -191,13 +230,13 @@ public class MainAppOper extends JFrame {
                 StringBuilder texto = new StringBuilder();
 
                 // Agregar encabezado
-                texto.append(String.format("%-6s %-20s%n",
+                texto.append(String.format("%-6s %-10s%n",
                         "Código", "Descripción"));
                 texto.append("-".repeat(30)).append("\n"); // Reducido el número de guiones
 
                 // Agregar cada motivo
                 for (MotivoNoEntrega motivo : motivos) {
-                    texto.append(String.format("%-6d %-20s%n",
+                    texto.append(String.format("%-6d %-30s%n",
                             motivo.getId(),      // Asumiendo que es el nombre correcto del método
                             motivo.getDescripcion()
                     ));
@@ -213,7 +252,6 @@ public class MainAppOper extends JFrame {
                         JOptionPane.ERROR_MESSAGE);
             }
         });
-
 
 
         JPanel buttonPanel = new JPanel();
@@ -246,6 +284,8 @@ public class MainAppOper extends JFrame {
         inputPanel.add(new JLabel("Fecha de Regreso (yyyy-MM-dd HH:mm:ss):"));
         inputPanel.add(fechaRegresoField);
 
+        display.setEditable(false);
+
         panel.add(inputPanel, BorderLayout.NORTH);
         agregarBotonesViajes(panel, display, idViajeField, camioneroDPIField, camionMatriculaField,
                 fechaSalidaField, fechaRegresoField);
@@ -260,14 +300,14 @@ public class MainAppOper extends JFrame {
         agregarBtn.addActionListener(e -> {
             try {
                 Viaje viaje = new Viaje(
-                        0,
+                        Integer.parseInt(idViajeField.getText()),
                         camioneroDPIField.getText(),
                         camionMatriculaField.getText(),
                         fechaSalidaField.getText().isEmpty() ? new Timestamp(0) : Timestamp.valueOf(fechaSalidaField.getText()),
                         fechaRegresoField.getText().isEmpty() ? new Timestamp(0) : Timestamp.valueOf(fechaSalidaField.getText())
                 );
-                Viaje.agregarViaje(viaje);
-                display.append("Viaje agregado: " + viaje.getIdViaje() + "\n");
+                String mensaje = Viaje.agregarViaje(viaje);
+                display.append(mensaje + "\n");
             } catch (SQLException ex) {
                 display.append("Error al agregar viaje: " + ex.getMessage() + "\n");
             }
@@ -280,11 +320,11 @@ public class MainAppOper extends JFrame {
                         Integer.parseInt(idViajeField.getText()),
                         camioneroDPIField.getText(),
                         camionMatriculaField.getText(),
-                        Timestamp.valueOf(fechaSalidaField.getText()),
+                        fechaSalidaField.getText().isEmpty() ? new Timestamp(0) : Timestamp.valueOf(fechaSalidaField.getText()),
                         Timestamp.valueOf(fechaRegresoField.getText())
                 );
-                Viaje.actualizarViaje(viaje);
-                display.append("Viaje actualizado: " + viaje.getIdViaje() + "\n");
+                String mensaje = Viaje.actualizarViaje(viaje);
+                display.append(mensaje + "\n");
             } catch (SQLException ex) {
                 display.append("Error al actualizar viaje: " + ex.getMessage() + "\n");
             }
@@ -300,7 +340,7 @@ public class MainAppOper extends JFrame {
 
                 // Agregar encabezado
                 texto.append(String.format("%-6s %-20s %-15s %-30s %-30s%n",
-                        "ID", "DPI","Matricula","Fecha Salida","Fecharegreso"));
+                        "ID", "DPI", "Matricula", "Fecha Salida", "Fecharegreso"));
                 texto.append("-".repeat(150)).append("\n"); // Reducido el número de guiones
 
                 // Agregar cada motivo

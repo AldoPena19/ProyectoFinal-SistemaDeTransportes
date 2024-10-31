@@ -38,10 +38,6 @@ public class MainAppCamionero extends JFrame {
     }
 
 
-
-
-
-
     private JPanel crearPanelPaquetes() {
         JPanel panel = new JPanel(new BorderLayout());
         JTextArea display = new JTextArea();
@@ -59,6 +55,8 @@ public class MainAppCamionero extends JFrame {
         inputPanel.add(codigoPaqueteField);
         inputPanel.add(new JLabel("Motivo No Entrega:"));
         inputPanel.add(motivoNoEntregaField);
+
+        display.setEditable(false);
 
         panel.add(inputPanel, BorderLayout.NORTH);
         agregarBotonesPaquetes(panel, display, codigoPaqueteField, motivoNoEntregaField);
@@ -83,8 +81,45 @@ public class MainAppCamionero extends JFrame {
             }
         });
 
+        JButton mostrarBtn = new JButton("Mostrar Paquetes");
+        mostrarBtn.addActionListener(e -> {
+            try {
+                List<Paquete> paquetes = Paquete.obtenerPaquetes();
+
+                // Crear un StringBuilder para construir el texto
+                StringBuilder texto = new StringBuilder();
+
+                // Agregar encabezado
+                texto.append(String.format("%-6s %-20s %-15s %-30s %-30s %-30s%n",
+                        "Codigo", "Descripcion", "Destinatario", "Direccion", "Departamento", "Estado Entrega"));
+                texto.append("-".repeat(150)).append("\n"); // Reducido el número de guiones
+
+                // Agregar cada motivo
+                for (Paquete paquete : paquetes) {
+                    texto.append(String.format("%-6s %-20s %-15s %-30s %-30s %-30s%n",
+                            paquete.getCodigoPaquete(),
+                            paquete.getDescripcion(),
+                            paquete.getDestinatario(),
+                            paquete.getDireccionDestinatario(),
+                            paquete.getNomDepartamento(),
+                            paquete.getEstadoEntrega()
+                    ));
+                }
+
+                // Actualizar el área de texto
+                display.setText(texto.toString());
+
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null,
+                        "Error al mostrar los paquetes: " + ex.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(actualizarBtn);
+        buttonPanel.add(mostrarBtn);
         panel.add(buttonPanel, BorderLayout.SOUTH);
     }
 
@@ -98,7 +133,7 @@ public class MainAppCamionero extends JFrame {
         JTextField idMotivoField = new JTextField();
         JTextField descripcionField = new JTextField();
 
-
+        display.setEditable(false);
 
         panel.add(inputPanel, BorderLayout.NORTH);
         agregarBotonesMotivos(panel, display, idMotivoField, descripcionField);
@@ -143,13 +178,10 @@ public class MainAppCamionero extends JFrame {
         });
 
 
-
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(mostrarBtn);
         panel.add(buttonPanel, BorderLayout.SOUTH);
     }
-
-
 
 
 }

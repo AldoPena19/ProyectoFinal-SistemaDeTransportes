@@ -24,10 +24,11 @@ public class MotivoNoEntrega {
 
 
     public static void agregarMotivo(MotivoNoEntrega motivo) throws SQLException {
-        String sql = "INSERT INTO Catalogo_Motivo_No_Entrega  (descripcion) VALUES ( ?)";
+        String sql = "INSERT INTO Catalogo_Motivo_No_Entrega  (id_motivo,descripcion) VALUES (?, ?)";
         try (
              PreparedStatement pstmt = con.prepareStatement(sql)) {
-            pstmt.setString(1, motivo.getDescripcion());
+            pstmt.setInt(1, motivo.getId());
+            pstmt.setString(2, motivo.getDescripcion());
             pstmt.executeUpdate();
         }
     }

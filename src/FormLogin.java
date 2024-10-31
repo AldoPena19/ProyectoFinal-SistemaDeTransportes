@@ -12,7 +12,7 @@ public class FormLogin extends JFrame implements ActionListener {
     JPasswordField textContrasena;
     JButton botonLogin, btnshowPass;
 
-    // Instancia de la clase ConexionBD
+    // Instancia de la clase usuarios
     Usuario conetar_usuario = new Usuario();
     //Intancia a recuperar contraseña
     RecuperarPassword Rpass = new RecuperarPassword();

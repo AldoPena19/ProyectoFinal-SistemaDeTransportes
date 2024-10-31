@@ -7,7 +7,7 @@ public class Camionero {
     private static Connection con = conexionBD.conectar();
 
 
-    private String dpi;
+    private static String dpi;
     private String nombre;
     private String telefono;
     private String direccion;
@@ -22,6 +22,7 @@ public class Camionero {
         this.salario = salario;
         this.zona = zona;
     }
+
 
     public String getDpi() {
         return dpi;
@@ -84,12 +85,11 @@ public class Camionero {
         // Establecer la fecha actual en el campo fecha_creacion
         ps.setTimestamp(7, new java.sql.Timestamp(System.currentTimeMillis()));
         ps.executeUpdate();
-        con.close();
     }
 
     public static List<Camionero> obtenerCamioneros() throws SQLException {
 
-        String sql = "SELECT * FROM Camionero";
+        String sql = "SELECT * FROM Camionero where status = 'A'";
         Statement st = con.createStatement();
         ResultSet rs = st.executeQuery(sql);
 
@@ -105,7 +105,6 @@ public class Camionero {
             );
             listaCamioneros.add(camionero);
         }
-        con.close();
         return listaCamioneros;
     }
 
@@ -126,12 +125,35 @@ public class Camionero {
     public static void eliminarCamionero(String dpi) throws SQLException {
 
 
-        String sql = "DELETE FROM Camionero WHERE DPI=?";
+        String sql = "UPDATE Camionero SET status = 'N', fecha_modificacion=? WHERE DPI=?";
         PreparedStatement ps = con.prepareStatement(sql);
-        ps.setString(1, dpi);
+        ps.setTimestamp(1,new java.sql.Timestamp(System.currentTimeMillis()));
+        ps.setString(2, dpi);
         ps.executeUpdate();
 
 
+    }
+
+    public static String obtenerEstadoCamionero(String dpi) throws SQLException{
+
+        PreparedStatement pst = null;
+        ResultSet query = null;
+        String estado = "";
+
+        String sql = "SELECT * FROM Camionero where dpi = ?";
+        pst = con.prepareStatement(sql);
+        pst.setString(1, dpi);
+
+
+        // Ejecutar la consulta
+        query = pst.executeQuery();
+
+        // Si hay resultados, significa que el usuario y la contraseña son válidos
+        if (query.next()) {
+            estado = query.getString("status");
+
+        }
+        return estado;
     }
 
 

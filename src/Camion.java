@@ -19,6 +19,10 @@ public class Camion {
         this.tonelaje = tonelaje;
     }
 
+
+
+
+
     public String getMatricula() { return matricula; }
     public String getModelo() { return modelo; }
     public String getTipo() { return tipo; }
@@ -44,7 +48,7 @@ public class Camion {
 
     public static List<Camion> obtenerCamiones() throws SQLException {
 
-        String sql = "SELECT * FROM Camion";
+        String sql = "SELECT * FROM Camion where status = 'A'";
         Statement st = con.createStatement();
         ResultSet rs = st.executeQuery(sql);
 
@@ -76,9 +80,34 @@ public class Camion {
 
     public static void eliminarCamion(String matricula) throws SQLException {
 
-        String sql = "DELETE FROM Camion WHERE Matricula=?";
+        String sql = "UPDATE camion SET status = 'N', fecha_modificacion=? WHERE matricula=?";
         PreparedStatement ps = con.prepareStatement(sql);
-        ps.setString(1, matricula);
+        ps.setTimestamp(1,new java.sql.Timestamp(System.currentTimeMillis()));
+        ps.setString(2, matricula);
         ps.executeUpdate();
     }
+
+    public static String obtenerEstadoCamiones(String matricula) throws SQLException{
+
+        PreparedStatement pst = null;
+        ResultSet query = null;
+        String estado = "";
+
+        String sql = "SELECT * FROM camion where matricula = ?";
+        pst = con.prepareStatement(sql);
+        pst.setString(1, matricula);
+
+
+        // Ejecutar la consulta
+        query = pst.executeQuery();
+
+        // Si hay resultados, significa que el usuario y la contraseña son válidos
+        if (query.next()) {
+            estado = query.getString("status");
+
+        }
+        return estado;
+    }
+
+
 }

@@ -8,6 +8,9 @@ import java.sql.SQLException;
 
 public class RecuperarPassword extends JFrame implements ActionListener {
 
+    // Instancia de la clase usuarios
+    public static Usuario conetar_usuario = new Usuario();
+
     // Componentes de la interfaz
     JLabel lblUsuario, lblContrasenaNueva, lblConfirmar, lblMensaje;
     JTextField txtUsuario;
@@ -92,10 +95,8 @@ public class RecuperarPassword extends JFrame implements ActionListener {
         btnRegresar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                FormLogin log = new FormLogin();
                 setVisible(false);
-                log.setVisible(true);
-
+                new FormLogin().setVisible(true);
             }
         });
 
@@ -103,8 +104,8 @@ public class RecuperarPassword extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        //instancia de Login
-        FormLogin log = new FormLogin();
+        boolean passnew = false;
+
 
         // Aquí va la lógica para actualizar la contraseña
         String usuario = txtUsuario.getText();
@@ -119,11 +120,11 @@ public class RecuperarPassword extends JFrame implements ActionListener {
             // Verificar si las contraseñas coinciden y actualizar la base de datos
             if (contrasenaNueva.equals(confirmarContrasena)) {
                 // Lógica para actualizar la contraseña en la base de datos
-                boolean passnew = CambioPassword(usuario, contrasenaNueva);
+                passnew = CambioPassword(usuario, contrasenaNueva);
                 if (passnew) {
                     JOptionPane.showMessageDialog(this, "Contraseña actualizada exitosamente.");
                     setVisible(false);
-                    log.setVisible(true);
+                    new FormLogin().setVisible(true);
                 }
 
 
@@ -135,7 +136,7 @@ public class RecuperarPassword extends JFrame implements ActionListener {
 
     }
 
-    public static boolean CambioPassword(String user, String passwordnew) {
+    public boolean CambioPassword(String user, String passwordnew) {
         Connection conexion = null;  // Declaración de la conexión
         ConexionBD conexionBD = new ConexionBD(); //Instancia a la coneccion
         PreparedStatement pst = null;
@@ -148,20 +149,27 @@ public class RecuperarPassword extends JFrame implements ActionListener {
                 throw new SQLException("No se pudo establecer conexion con la base de datos");
             }
 
-            //crear consulta SQL
-            String sql = "UPDATE Usuario SET password = ? WHERE usuario = ? and status = 'A'";
-            pst = conexion.prepareStatement(sql);
-            pst.setString(1, passwordnew);
-            pst.setString(2, user);
 
-            // Ejecutar el query
-            int rowsAffected = pst.executeUpdate();
-            if (rowsAffected > 0) {
-                cambiopass = true;
-                System.out.println("Contraseña actualizada exitosamente.");
-            } else {
-                cambiopass = false;
-                System.out.println("No se actualizó ninguna fila. Verifique el nombre de usuario ingresado.");
+
+            if (conetar_usuario.validarUsuario(user,passwordnew)){
+                //crear consulta SQL
+                String sql = "UPDATE Usuario SET password = ? WHERE usuario = ? and status = 'A'";
+                pst = conexion.prepareStatement(sql);
+                pst.setString(1, passwordnew);
+                pst.setString(2, user);
+
+                // Ejecutar el query
+                int rowsAffected = pst.executeUpdate();
+                if (rowsAffected > 0) {
+                    cambiopass = true;
+                    System.out.println("Contraseña actualizada exitosamente.");
+                } else {
+                    cambiopass = false;
+                    System.out.println("No se actualizó ninguna fila. Verifique el nombre de usuario ingresado.");
+                }
+
+            }else {
+                JOptionPane.showMessageDialog(this, "Usuario no existe");
             }
 
         } catch (

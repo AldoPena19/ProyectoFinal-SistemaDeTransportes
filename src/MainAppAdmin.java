@@ -67,6 +67,8 @@ public class MainAppAdmin extends JFrame {
         inputPanel.add(new JLabel("Zona:"));
         inputPanel.add(zonaField);
 
+        display.setEditable(false);
+
         panel.add(inputPanel, BorderLayout.NORTH);
         agregarBotonesCamioneros(panel, display, dpiField, nombreField, telefonoField, direccionField, salarioField, zonaField);
 
@@ -143,10 +145,48 @@ public class MainAppAdmin extends JFrame {
             }
         });
 
+        JButton mostrarBtn = new JButton("Mostrar Camioneros");
+        mostrarBtn.addActionListener(e -> {
+            try {
+                List<Camionero> camioneros = Camionero.obtenerCamioneros();
+
+                // Crear un StringBuilder para construir el texto
+                StringBuilder texto = new StringBuilder();
+
+                // Agregar encabezado
+                texto.append(String.format("%-20s %-20s %-15s %-15s %-15s %-30s%n",
+                        "DPI", "Nombre", "Telefono", "Direccion", " Salario", "Zona"));
+                texto.append("-".repeat(150)).append("\n"); // Reducido el número de guiones
+
+                // Agregar cada motivo
+                for (Camionero camionero : camioneros) {
+                    texto.append(String.format("%-6s %-20s %-15s %-15s %-15.2f %-30s%n",
+                            camionero.getDpi(),
+                            camionero.getNombre(),
+                            camionero.getTelefono(),
+                            camionero.getDireccion(),
+                            camionero.getSalario(),
+                            camionero.getZona()
+                    ));
+                }
+
+                // Actualizar el área de texto
+                display.setText(texto.toString());
+
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null,
+                        "Error al mostrar los motivos: " + ex.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(agregarBtn);
         buttonPanel.add(eliminarBtn);
         buttonPanel.add(actualizarBtn);
+        buttonPanel.add(mostrarBtn);
         panel.add(buttonPanel, BorderLayout.SOUTH);
     }
 
@@ -169,6 +209,8 @@ public class MainAppAdmin extends JFrame {
         inputPanel.add(tipoField);
         inputPanel.add(new JLabel("Tonelaje:"));
         inputPanel.add(tonelajeField);
+
+        display.setEditable(false);
 
         panel.add(inputPanel, BorderLayout.NORTH);
         agregarBotonesCamiones(panel, display, matriculaField, modeloField, tipoField, tonelajeField);
@@ -222,10 +264,44 @@ public class MainAppAdmin extends JFrame {
             }
         });
 
+        JButton mostrarBtn = new JButton("Mostrar Camiones");
+        mostrarBtn.addActionListener(e -> {
+            try {
+                List<Camion> camiones = Camion.obtenerCamiones();
+
+                // Crear un StringBuilder para construir el texto
+                StringBuilder texto = new StringBuilder();
+
+                // Agregar encabezado
+                texto.append(String.format("%-20s %-20s %-15s %-20s%n", "Matricula", "Modelo", "Tipo", "Tonelaje"));
+                texto.append("-".repeat(80)).append("\n"); // Reducido el número de guiones
+
+                // Agregar cada motivo
+                for (Camion camion : camiones) {
+                    texto.append(String.format("%-20s %-20s %-15s %-30f",
+                            camion.getMatricula(),
+                            camion.getModelo(),
+                            camion.getTipo(),
+                            camion.getTonelaje()
+                    ));
+                }
+
+                // Actualizar el área de texto
+                display.setText(texto.toString());
+
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null,
+                        "Error al mostrar los camiones: " + ex.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(agregarBtn);
         buttonPanel.add(eliminarBtn);
         buttonPanel.add(actualizarBtn);
+        buttonPanel.add(mostrarBtn);
         panel.add(buttonPanel, BorderLayout.SOUTH);
     }
 
@@ -255,6 +331,9 @@ public class MainAppAdmin extends JFrame {
         inputPanel.add(new JLabel("Motivo No Entrega:"));
         inputPanel.add(motivoNoEntregaField);
 
+
+        display.setEditable(false);
+
         panel.add(inputPanel, BorderLayout.NORTH);
         agregarBotonesPaquetes(panel, display, codigoPaqueteField, descripcionField, destinatarioField,
                 direccionDestinatarioField, codigoDepartamentoField, motivoNoEntregaField);
@@ -274,7 +353,7 @@ public class MainAppAdmin extends JFrame {
                         destinatarioField.getText(),
                         direccionDestinatarioField.getText(),
                         Integer.parseInt(codigoDepartamentoField.getText()),
-                        1
+                        motivoNoEntregaField.getText().isEmpty() ? 1 : Integer.parseInt(motivoNoEntregaField.getText())
                 );
                 Paquete.agregarPaquete(paquete);
                 display.append("Paquete agregado: " + paquete.getDescripcion() + "\n");
@@ -312,10 +391,47 @@ public class MainAppAdmin extends JFrame {
             }
         });
 
+        JButton mostrarBtn = new JButton("Mostrar Paquetes");
+        mostrarBtn.addActionListener(e -> {
+            try {
+                List<Paquete> paquetes = Paquete.obtenerPaquetes();
+
+                // Crear un StringBuilder para construir el texto
+                StringBuilder texto = new StringBuilder();
+
+                // Agregar encabezado
+                texto.append(String.format("%-6s %-20s %-15s %-30s %-30s %-30s%n",
+                        "Codigo", "Descripcion", "Destinatario", "Direccion", "Departamento", "Estado Entrega"));
+                texto.append("-".repeat(150)).append("\n"); // Reducido el número de guiones
+
+                // Agregar cada motivo
+                for (Paquete paquete : paquetes) {
+                    texto.append(String.format("%-6s %-20s %-15s %-30s %-30s %-30s%n",
+                            paquete.getCodigoPaquete(),
+                            paquete.getDescripcion(),
+                            paquete.getDestinatario(),
+                            paquete.getDireccionDestinatario(),
+                            paquete.getNomDepartamento(),
+                            paquete.getEstadoEntrega()
+                    ));
+                }
+
+                // Actualizar el área de texto
+                display.setText(texto.toString());
+
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null,
+                        "Error al mostrar los paquetes: " + ex.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(agregarBtn);
-        buttonPanel.add(eliminarBtn);
+        //buttonPanel.add(eliminarBtn);
         buttonPanel.add(actualizarBtn);
+        buttonPanel.add(mostrarBtn);
         panel.add(buttonPanel, BorderLayout.SOUTH);
     }
 
@@ -333,6 +449,8 @@ public class MainAppAdmin extends JFrame {
         inputPanel.add(idMotivoField);
         inputPanel.add(new JLabel("Descripción:"));
         inputPanel.add(descripcionField);
+
+        display.setEditable(false);
 
         panel.add(inputPanel, BorderLayout.NORTH);
         agregarBotonesMotivos(panel, display, idMotivoField, descripcionField);
@@ -390,13 +508,13 @@ public class MainAppAdmin extends JFrame {
                 StringBuilder texto = new StringBuilder();
 
                 // Agregar encabezado
-                texto.append(String.format("%-6s %-20s%n",
+                texto.append(String.format("%-20s %-30s%n",
                         "Código", "Descripción"));
                 texto.append("-".repeat(30)).append("\n"); // Reducido el número de guiones
 
                 // Agregar cada motivo
                 for (MotivoNoEntrega motivo : motivos) {
-                    texto.append(String.format("%-6d %-20s%n",
+                    texto.append(String.format("%-6d %-30s%n",
                             motivo.getId(),      // Asumiendo que es el nombre correcto del método
                             motivo.getDescripcion()
                     ));
@@ -412,7 +530,6 @@ public class MainAppAdmin extends JFrame {
                         JOptionPane.ERROR_MESSAGE);
             }
         });
-
 
 
         JPanel buttonPanel = new JPanel();
@@ -446,6 +563,8 @@ public class MainAppAdmin extends JFrame {
         inputPanel.add(new JLabel("Fecha de Regreso (yyyy-MM-dd HH:mm:ss):"));
         inputPanel.add(fechaRegresoField);
 
+        display.setEditable(false);
+
         panel.add(inputPanel, BorderLayout.NORTH);
         agregarBotonesViajes(panel, display, idViajeField, camioneroDPIField, camionMatriculaField,
                 fechaSalidaField, fechaRegresoField);
@@ -466,8 +585,8 @@ public class MainAppAdmin extends JFrame {
                         fechaSalidaField.getText().isEmpty() ? new Timestamp(0) : Timestamp.valueOf(fechaSalidaField.getText()),
                         fechaRegresoField.getText().isEmpty() ? new Timestamp(0) : Timestamp.valueOf(fechaSalidaField.getText())
                 );
-                Viaje.agregarViaje(viaje);
-                display.append("Viaje agregado: " + viaje.getIdViaje() + "\n");
+                String mensaje = Viaje.agregarViaje(viaje);
+                display.append(mensaje + "\n");
             } catch (SQLException ex) {
                 display.append("Error al agregar viaje: " + ex.getMessage() + "\n");
             }
@@ -480,11 +599,11 @@ public class MainAppAdmin extends JFrame {
                         Integer.parseInt(idViajeField.getText()),
                         camioneroDPIField.getText(),
                         camionMatriculaField.getText(),
-                        Timestamp.valueOf(fechaSalidaField.getText()),
+                        fechaSalidaField.getText().isEmpty() ? new Timestamp(0) : Timestamp.valueOf(fechaSalidaField.getText()),
                         Timestamp.valueOf(fechaRegresoField.getText())
                 );
-                Viaje.actualizarViaje(viaje);
-                display.append("Viaje actualizado: " + viaje.getIdViaje() + "\n");
+                String mensaje = Viaje.actualizarViaje(viaje);
+                display.append(mensaje + "\n");
             } catch (SQLException ex) {
                 display.append("Error al actualizar viaje: " + ex.getMessage() + "\n");
             }
@@ -510,8 +629,8 @@ public class MainAppAdmin extends JFrame {
                 StringBuilder texto = new StringBuilder();
 
                 // Agregar encabezado
-                texto.append(String.format("%-6s %-20s %-15s %-30s %-30s%n",
-                        "ID", "DPI","Matricula","Fecha Salida","Fecharegreso"));
+                texto.append(String.format("%-10s %-25s %-15s %-30s %-30s%n",
+                        "ID", "DPI", "Matricula", "Fecha Salida", "Fecha Regreso"));
                 texto.append("-".repeat(150)).append("\n"); // Reducido el número de guiones
 
                 // Agregar cada motivo
@@ -540,7 +659,7 @@ public class MainAppAdmin extends JFrame {
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(agregarBtn);
         buttonPanel.add(actualizarBtn);
-        buttonPanel.add(eliminarBtn);
+        //buttonPanel.add(eliminarBtn);
         buttonPanel.add(mostrarBtn);
         panel.add(buttonPanel, BorderLayout.SOUTH);
     }

@@ -10,6 +10,8 @@ public class Paquete {
     private String descripcion;
     private String destinatario;
     private String direccionDestinatario;
+    private String desDepartamento;
+    private String estado;
     private int codigoDepartamento;
     private int motivoNoEntrega;  
     public Paquete(int codigoPaquete, String descripcion, String destinatario, String direccionDestinatario, int codigoDepartamento, int motivoNoEntrega) {
@@ -19,6 +21,15 @@ public class Paquete {
         this.direccionDestinatario = direccionDestinatario;
         this.codigoDepartamento = codigoDepartamento;
         this.motivoNoEntrega = motivoNoEntrega;
+    }
+
+    public Paquete(int codigoPaquete, String descripcion, String destinatario, String direccionDestinatario, String nomDepartamento, String estadoPaquete) {
+        this.codigoPaquete = codigoPaquete;
+        this.descripcion = descripcion;
+        this.destinatario = destinatario;
+        this.direccionDestinatario = direccionDestinatario;
+        this.desDepartamento = nomDepartamento;
+        this.estado = estadoPaquete;
     }
 
     public Paquete(int codigoPaquete,int motivoNoEntrega) {
@@ -32,6 +43,8 @@ public class Paquete {
     public String getDireccionDestinatario() { return direccionDestinatario; }
     public int getCodigoDepartamento() { return codigoDepartamento; }
     public Integer getMotivoNoEntrega() { return motivoNoEntrega; }
+    public String getNomDepartamento() { return desDepartamento; }
+    public String getEstadoEntrega() { return estado; }
 
     public void setCodigoPaquete(int codigoPaquete) { this.codigoPaquete = codigoPaquete; }
     public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
@@ -42,7 +55,7 @@ public class Paquete {
 
     public static void agregarPaquete(Paquete paquete) throws SQLException {
 
-        String sql = "INSERT INTO Paquete (codigo_paquete, Descripcion, Destinatario, direccion_destinatario, codigo_departamento, fecha_creacion) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Paquete (codigo_paquete, Descripcion, Destinatario, direccion_destinatario, codigo_departamento, fecha_creacion,MotivoNoEntrega) VALUES (?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = con.prepareStatement(sql);
         ps.setInt(1, paquete.getCodigoPaquete());
         ps.setString(2, paquete.getDescripcion());
@@ -50,12 +63,16 @@ public class Paquete {
         ps.setString(4, paquete.getDireccionDestinatario());
         ps.setInt(5, paquete.getCodigoDepartamento());
         ps.setTimestamp(6,new java.sql.Timestamp(System.currentTimeMillis()));
+        ps.setInt(7,paquete.motivoNoEntrega);
         ps.executeUpdate();
     }
 
     public static List<Paquete> obtenerPaquetes() throws SQLException {
 
-        String sql = "SELECT * FROM Paquete";
+
+        String sql = "SELECT p.codigo_paquete,p.descripcion,p.destinatario,p.descripcion,d.nombre AS departamento,c.descripcion AS Estado FROM Paquete p " +
+                " JOIN Catalogo_Motivo_No_Entrega c ON p.MotivoNoEntrega = c.id_motivo" +
+                " JOIN Departamento d ON p.codigo_departamento = d.codigo_departamento;";
         Statement st = con.createStatement();
         ResultSet rs = st.executeQuery(sql);
 
@@ -65,13 +82,12 @@ public class Paquete {
                 rs.getInt("codigo_paquete"),
                 rs.getString("Descripcion"),
                 rs.getString("Destinatario"),
-                rs.getString("direccion_destinatario"),
-                rs.getInt("codigo_departamento"),
-                rs.getObject("MotivoNoEntrega", Integer.class)  
+                rs.getString("destinatario"),
+                rs.getString("departamento"),
+                rs.getString("estado")
             );
             listaPaquetes.add(paquete);
         }
-        con.close();
         return listaPaquetes;
     }
 

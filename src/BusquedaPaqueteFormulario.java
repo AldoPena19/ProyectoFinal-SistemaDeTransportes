@@ -14,7 +14,8 @@ public class BusquedaPaqueteFormulario extends JFrame {
 
     // Campos de entrada y etiquetas para mostrar los resultados
     private JTextField txtReferencia;
-    private JTextField txtNombreCamionero, txtMatricula, txtDescripcionPaquete, txtDestinatario, txtDireccionDestinatario, txtCodigoDepartamento, txtNombreDepartamento, txtFechaSalida;
+    private JTextField txtNombreCamionero, txtMatricula, txtDescripcionPaquete, txtDestinatario, txtDireccionDestinatario, txtCodigoDepartamento,
+            txtNombreDepartamento, txtFechaSalida,txtstatus;
 
     public BusquedaPaqueteFormulario() {
         setTitle("Formulario de Búsqueda de Paquete");
@@ -114,6 +115,16 @@ public class BusquedaPaqueteFormulario extends JFrame {
         txtFechaSalida.setEditable(false);
         add(txtFechaSalida);
 
+        // Campo para ingresar referencia
+        JLabel lblstatus = new JLabel("Estado del paquete");
+        lblstatus.setBounds(20, 380, 250, 20);
+        add(lblstatus);
+
+        txtstatus = new JTextField();
+        txtstatus.setBounds(270, 380, 200, 25);
+        txtstatus.setEditable(false);
+        add(txtstatus);
+
 
 
         // Acción del botón buscar
@@ -139,13 +150,14 @@ public class BusquedaPaqueteFormulario extends JFrame {
 
         String consultaSQL = "SELECT c.nombre AS nombre_camionero, ca.matricula, p.descripcion, " +
                 "p.destinatario, p.direccion_destinatario, d.codigo_departamento, " +
-                "d.nombre AS nombre_departamento, v.fecha_salida " +
-                "FROM Viaje v " +
-                "JOIN Camionero c ON v.DPI_camionero = c.DPI " +
-                "JOIN Camion ca ON v.matricula_camion = ca.matricula " +
-                "JOIN Paquete p ON v.id_viaje = p.codigo_paquete " +
-                "JOIN Departamento d ON p.codigo_departamento = d.codigo_departamento " +
-                "WHERE v.id_viaje = ?";
+                "d.nombre AS nombre_departamento, v.fecha_salida, cm.descripcion AS status" +
+                " FROM Viaje v " +
+                " JOIN Camionero c ON v.DPI_camionero = c.DPI " +
+                " JOIN Camion ca ON v.matricula_camion = ca.matricula " +
+                " JOIN Paquete p ON v.id_viaje = p.codigo_paquete " +
+                " JOIN Departamento d ON p.codigo_departamento = d.codigo_departamento " +
+                " JOIN Catalogo_Motivo_No_Entrega cm ON p.MotivoNoEntrega = cm.id_motivo"+
+                " WHERE v.id_viaje = ?";
 
         try (
              PreparedStatement stmt = con.prepareStatement(consultaSQL)) {
@@ -166,6 +178,7 @@ public class BusquedaPaqueteFormulario extends JFrame {
                 txtCodigoDepartamento.setText(rs.getString("codigo_departamento"));
                 txtNombreDepartamento.setText(rs.getString("nombre_departamento"));
                 txtFechaSalida.setText(rs.getTimestamp("fecha_salida").toString());
+                txtstatus.setText(rs.getString("status"));
             } else {
                 JOptionPane.showMessageDialog(this, "No se encontraron resultados para la referencia proporcionada.");
             }
